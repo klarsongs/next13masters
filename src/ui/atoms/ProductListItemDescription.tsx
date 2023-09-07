@@ -1,4 +1,4 @@
-import { type Product } from "../types";
+import { type Product } from "@/ui/types";
 import { formatMoney } from "@/utils";
 
 type ProductListItemDescriptionProps = {

@@ -1,5 +1,5 @@
-import { ProductListItem } from "../molecules/ProductListItem";
-import { type Product } from "../types";
+import { ProductListItem } from "@/ui/molecules/ProductListItem";
+import { type Product } from "@/ui/types";
 
 export const ProductList = ({ products }: { products: Product[] }) => {
 	return (
