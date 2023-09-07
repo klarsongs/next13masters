@@ -1,6 +1,6 @@
-import { ProductCoverImage } from "../atoms/ProductCoverImage";
-import { ProductListItemDescription } from "../atoms/ProductListItemDescription";
-import { type Product } from "../types";
+import { ProductListItemDescription } from "@/ui/atoms/ProductListItemDescription";
+import { type Product } from "@/ui/types";
+import { ProductCoverImage } from "@/ui/atoms/ProductCoverImage";
 
 type ProducListItemProps = {
 	product: Product;
