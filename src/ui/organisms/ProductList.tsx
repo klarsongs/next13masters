@@ -1,10 +1,10 @@
+import { type ProductListItemFragment } from "@/gql/graphql";
 import { ProductListItem } from "@/ui/molecules/ProductListItem";
-import { type Product } from "@/ui/types";
 
 export const ProductList = ({
 	products,
 }: {
-	products: Product[];
+	products: ProductListItemFragment[];
 }) => {
 	return (
 		<ul
