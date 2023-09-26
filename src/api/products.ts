@@ -1,56 +1,42 @@
-import { type Product } from "@/ui/types";
+import { executeGraphql } from "./utils";
+import {
+	ProductGetByIdDocument,
+	type ProductListItemFragment,
+	ProductsGetByCategorySlugDocument,
+	ProductsGetListDocument,
+} from "@/gql/graphql";
 
-type ProductResponseItem = {
-	id: string;
-	title: string;
-	price: number;
-	description: string;
-	category: string;
-	rating: Rating;
-	image: string;
-	longDescription: string;
-};
+export const getProductsList = async (
+	pageNumber: number,
+): Promise<ProductListItemFragment[]> => {
+	console.log({ pageNumber });
 
-type Rating = {
-	rate: number;
-	count: number;
-};
-
-export const getProductsList = async (pageNumber: number) => {
-	const res = await fetch(
-		`https://naszsklep-api.vercel.app/api/products?take=20&offset=${
-			20 * pageNumber
-		}`,
+	const graphqlRespose = await executeGraphql(
+		ProductsGetListDocument,
 	);
-	const productsResponse =
-		(await res.json()) as ProductResponseItem[];
 
-	const products = productsResponse.map(productResponseItemToProduct);
+	return graphqlRespose.products;
+};
+
+export const getProductById = async (
+	id: ProductListItemFragment["id"],
+) => {
+	const data = await executeGraphql(ProductGetByIdDocument, { id });
+
+	const product = data?.product;
+
+	return product;
+};
+
+export const getProductsByCategorySlug = async (
+	categorySlug: string,
+) => {
+	const data = await executeGraphql(
+		ProductsGetByCategorySlugDocument,
+		{ slug: categorySlug },
+	);
+
+	const products = data.categories[0]?.products;
 
 	return products;
-};
-
-export const getProductById = async (id: Product["id"]) => {
-	const res = await fetch(
-		`https://naszsklep-api.vercel.app/api/products/${id}`,
-	);
-	const productsResponse = (await res.json()) as ProductResponseItem;
-
-	return productResponseItemToProduct(productsResponse);
-};
-
-const productResponseItemToProduct = (
-	product: ProductResponseItem,
-) => {
-	return {
-		id: product.id,
-		category: product.category,
-		name: product.title,
-		price: product.price,
-		description: product.description,
-		coverImage: {
-			src: product.image,
-			alt: product.title,
-		},
-	};
 };
