@@ -16,16 +16,15 @@ type ActiveLinkProps<T extends string> = {
 export const ActiveLink = <T extends string>({
 	href,
 	children,
-	className = "text-blue-400 hover:text-blue-600",
-	activeClassName = "border-b-2 border-blue-400",
+	className = "text-neutral-600 hover:text-neutral-900",
+	activeClassName = "border-b-2 border-green-400",
 	exact = true,
 }: ActiveLinkProps<T>) => {
 	const pathname = usePathname();
 	const isActive = exact
 		? pathname === href
 		: pathname === href ||
-		  (href.length > 1 &&
-				pathname.startsWith(`/${href.split("/")[1]}`));
+		  (href.length > 1 && pathname.startsWith(href));
 
 	return (
 		<Link

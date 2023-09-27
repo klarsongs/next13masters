@@ -5,6 +5,14 @@ const nextConfig = {
 		typedRoutes: true,
 		mdxRs: true,
 	},
+	images: {
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "media.graphassets.com",
+			},
+		],
+	},
 	async redirects() {
 		return [
 			{
@@ -13,8 +21,8 @@ const nextConfig = {
 				permanent: true,
 			},
 			{
-				source: "/categories",
-				destination: "/categories/t-shirts/1",
+				source: "/categories/:category",
+				destination: "/categories/:category/1",
 				permanent: true,
 			},
 		];

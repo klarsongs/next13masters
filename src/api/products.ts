@@ -4,6 +4,9 @@ import {
 	type ProductListItemFragment,
 	ProductsGetByCategorySlugDocument,
 	ProductsGetListDocument,
+	ProductsGetCategoriesDocument,
+	type CategoryNameFragment,
+	ProductsGetRelatedDocument,
 } from "@/gql/graphql";
 
 export const getProductsList = async (
@@ -39,4 +42,26 @@ export const getProductsByCategorySlug = async (
 	const products = data.categories[0]?.products;
 
 	return products;
+};
+
+export const getProductsCategories = async (): Promise<
+	CategoryNameFragment[]
+> => {
+	const data = await executeGraphql(ProductsGetCategoriesDocument);
+
+	const categories = data.categories;
+
+	return categories;
+};
+
+export const getRelatedProducts = async (
+	id: string,
+): Promise<ProductListItemFragment[]> => {
+	const data = await executeGraphql(ProductsGetRelatedDocument, {
+		id,
+	});
+
+	const relatedProducts = data.products;
+
+	return relatedProducts;
 };

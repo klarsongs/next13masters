@@ -25,16 +25,14 @@ export default async function CategoryProductsPage({
 }) {
 	const products = await getProductsByCategorySlug(params.category);
 
+	console.log(params.pageNumber);
+
 	if (!products) {
 		notFound();
 	}
 
 	return (
 		<>
-			<h1>
-				Produkty z kategorii {params.category}, strona{" "}
-				{params.pageNumber}
-			</h1>
 			<ProductList products={products} />
 		</>
 	);
