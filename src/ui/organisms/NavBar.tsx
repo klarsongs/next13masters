@@ -1,11 +1,12 @@
 // Check Lucide icons
+import { Search } from "../atoms/Search";
 import { getProductsCategories } from "@/api/products";
 import { ActiveLink } from "@/ui/atoms/ActiveLink";
 
 export const NavBar = async () => {
 	const categories = await getProductsCategories();
 	return (
-		<nav>
+		<nav className="mx-6 my-2 flex justify-between align-middle">
 			<ul className="my-4 flex justify-center space-x-6">
 				<li>
 					<ActiveLink href="/">Homepage</ActiveLink>
@@ -26,6 +27,7 @@ export const NavBar = async () => {
 					</li>
 				))}
 			</ul>
+			<Search />
 		</nav>
 	);
 };

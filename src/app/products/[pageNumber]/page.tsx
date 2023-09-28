@@ -1,3 +1,4 @@
+import { type Route } from "next";
 import { ProductList } from "@/ui/organisms/ProductList";
 import { getProductsList } from "@/api/products";
 import { Pagination } from "@/ui/molecules/Pagination";
@@ -15,13 +16,20 @@ export default async function Products({
 }: {
 	params: { pageNumber: string };
 }) {
-	const products = await getProductsList(Number(params.pageNumber));
+	const { products, totalCount } = await getProductsList(
+		Number(params.pageNumber),
+	);
 
 	return (
 		<>
 			<ProductList products={products} />
 			<article className="mt-6 flex justify-center">
-				<Pagination totalCount={60} />
+				<Pagination
+					totalCount={totalCount}
+					nextHref={(pageNumber) =>
+						`/products/${pageNumber}` as Route
+					}
+				/>
 			</article>
 		</>
 	);

@@ -1,4 +1,21 @@
+import { type Metadata } from "next";
 import { getCollectionBySlug } from "@/api/collections";
+import { capitalizeSlug } from "@/utils";
+
+export const generateMetadata = async ({
+	params: { collection },
+}: {
+	params: { collection: string };
+}): Promise<Metadata> => {
+	const collectionTitle = capitalizeSlug(collection);
+
+	return {
+		title: `${collectionTitle}`,
+		openGraph: {
+			title: `${collectionTitle}`,
+		},
+	};
+};
 
 export default async function CollectionPage({
 	params,

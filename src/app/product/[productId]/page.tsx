@@ -46,7 +46,7 @@ export default async function ProductPage({
 					(variant) => variant.__typename !== "ProductSizeVariant",
 				)
 				.map((variant) =>
-					(variant as { color: string }).color.toLocaleLowerCase(),
+					(variant as { color: string }).color.toLowerCase(),
 				),
 		),
 	];
@@ -73,6 +73,7 @@ export default async function ProductPage({
 				/>
 			)}
 			<p className="my-4">{product.description}</p>
+			{/* TODO: For each color check corresponding sizes */}
 			<ColorPicker colors={colors} />
 			<SizePicker sizes={sizes} />
 			<h2 className="mb-4 mt-12 text-2xl font-bold">
