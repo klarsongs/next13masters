@@ -1,0 +1,11 @@
+query ProductsGetRelated($id: ID!) {
+	products(
+		first: 4
+		where: {
+			id_not: $id
+			categories_some: { products_some: { id: $id } }
+		}
+	) {
+		...ProductListItem
+	}
+}

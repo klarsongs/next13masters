@@ -1,8 +1,10 @@
-// import { Suspense } from "react";
 import { type Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getProductById } from "@/api/products";
-import { ProductCoverImage } from "@/ui/atoms/ProductCoverImage";
+import { getProductById, getRelatedProducts } from "@/api/products";
+import { ProductImage } from "@/ui/atoms/ProductImage";
+import { RelatedProducts } from "@/ui/organisms/RelatedProducts";
+import { ColorPicker } from "@/ui/molecules/ColorPicker";
+import { SizePicker } from "@/ui/molecules/SizePicker";
 
 export const generateMetadata = async ({
 	params: { productId },
@@ -29,26 +31,55 @@ export default async function ProductPage({
 	params: { productId: string };
 }) {
 	const product = await getProductById(params.productId);
+	const relatedProducts = await getRelatedProducts(params.productId);
 
 	if (!product) {
 		notFound();
 	}
 
+	const productVariants = product.variants;
+
+	const colors = [
+		...new Set(
+			productVariants
+				.filter(
+					(variant) => variant.__typename !== "ProductSizeVariant",
+				)
+				.map((variant) =>
+					(variant as { color: string }).color.toLowerCase(),
+				),
+		),
+	];
+
+	const sizes = [
+		...new Set(
+			productVariants
+				.filter(
+					(variant) => variant.__typename !== "ProductColorVariant",
+				)
+				.map((variant) => (variant as { size: string }).size),
+		),
+	];
+
 	return (
-		// 	<aside>
-		// 		<Suspense>
-		// 			<SuggestedProductsList />
-		// 		</Suspense>
-		// 	</aside>
 		<article className="mx-auto max-w-xl">
 			<h1 className="mb-4 mt-4 text-3xl font-bold">{product.name}</h1>
 			{product.images[0] && (
-				<ProductCoverImage
+				<ProductImage
 					src={product.images[0].url}
 					alt={product.name}
+					width={512}
+					height={512}
 				/>
 			)}
-			<p className="mt-4">{product.description}</p>
+			<p className="my-4">{product.description}</p>
+			{/* TODO: For each color check corresponding sizes */}
+			<ColorPicker colors={colors} />
+			<SizePicker sizes={sizes} />
+			<h2 className="mb-4 mt-12 text-2xl font-bold">
+				Related products
+			</h2>
+			<RelatedProducts products={relatedProducts} />
 		</article>
 	);
 }

@@ -1,0 +1,4 @@
+fragment CategoryName on Category {
+	name
+	slug
+}

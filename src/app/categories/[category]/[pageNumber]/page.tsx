@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
+import { type Metadata, type Route } from "next";
 import { ProductList } from "@/ui/organisms/ProductList";
 import { getProductsByCategorySlug } from "@/api/products";
+import { Pagination } from "@/ui/molecules/Pagination";
+import { capitalizeSlug } from "@/utils";
 
 export const generateStaticParams = async ({
 	params,
@@ -18,12 +21,32 @@ export const generateStaticParams = async ({
 	}
 };
 
+export const generateMetadata = async ({
+	params: { category },
+}: {
+	params: { category: string };
+}): Promise<Metadata> => {
+	const categoryTitle = capitalizeSlug(category);
+
+	return {
+		title: `${categoryTitle}`,
+		openGraph: {
+			title: `${categoryTitle}`,
+		},
+	};
+};
+
 export default async function CategoryProductsPage({
 	params,
 }: {
 	params: { category: string; pageNumber: string };
 }) {
-	const products = await getProductsByCategorySlug(params.category);
+	const categoryTitle = capitalizeSlug(params.category);
+
+	const { products, totalCount } = await getProductsByCategorySlug(
+		params.category,
+		Number(params.pageNumber),
+	);
 
 	if (!products) {
 		notFound();
@@ -31,11 +54,18 @@ export default async function CategoryProductsPage({
 
 	return (
 		<>
-			<h1>
-				Produkty z kategorii {params.category}, strona{" "}
-				{params.pageNumber}
+			<h1 className="mb-8 mt-4 text-3xl font-bold">
+				{categoryTitle}
 			</h1>
 			<ProductList products={products} />
+			<article className="mt-6 flex justify-center">
+				<Pagination
+					totalCount={totalCount}
+					nextHref={(pageNumber) =>
+						`/categories/${params.category}/${pageNumber}` as Route
+					}
+				/>
+			</article>
 		</>
 	);
 }

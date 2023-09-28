@@ -1,0 +1,6 @@
+query CollectionsList {
+	collections {
+		name
+		slug
+	}
+}
