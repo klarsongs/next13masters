@@ -16,9 +16,6 @@ export async function POST(request: NextRequest): Promise<Response> {
 		console.log(`Revalidating cart...`);
 		revalidatePath("/cart");
 
-		console.log(`Revalidating product id tag...`);
-		revalidateTag(`product-${data.id}`);
-
 		return NextResponse.json(
 			{ message: "Revalidated!" },
 			{ status: 200 },

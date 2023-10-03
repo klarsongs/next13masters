@@ -44,7 +44,7 @@ export const getProductById = async (
 		variables: { id },
 		next: {
 			revalidate: 15,
-			tags: [`product-${id}`],
+			tags: ["products"],
 		},
 	});
 
