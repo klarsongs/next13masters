@@ -7,8 +7,10 @@ export async function POST(request: NextRequest): Promise<Response> {
 	if (
 		typeof body === "object" &&
 		body &&
-		"productId" in body &&
-		typeof body.productId === "string"
+		"__typename" in body &&
+		body.__typename === "Product" &&
+		"id" in body &&
+		typeof body.id === "string"
 	) {
 		console.log(`Revalidating products...`);
 		revalidateTag("products");
@@ -17,12 +19,15 @@ export async function POST(request: NextRequest): Promise<Response> {
 		revalidatePath("/cart");
 
 		console.log(`Revalidating product page`);
-		revalidatePath(`/product/${body.productId}`);
+		revalidatePath(`/product/${body.id}`);
 
-		return NextResponse.json({ message: "OK" }, { status: 200 });
+		return NextResponse.json(
+			{ message: "Revalidated!" },
+			{ status: 200 },
+		);
 	} else {
 		return NextResponse.json(
-			{ message: "There was an error revalidating products" },
+			{ message: "Not a product change, aborting..." },
 			{ status: 400 },
 		);
 	}
