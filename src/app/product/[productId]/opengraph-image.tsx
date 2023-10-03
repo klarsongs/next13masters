@@ -32,9 +32,9 @@ export default async function OpenGraphImage({
 						<img src={product?.images[0]?.url} />
 					</div>
 				)}
-				<div tw="flex flex-col items-center justify-center w-[350px] ">
-					<p tw="font-sans p-0 text-[64px]">{product?.name}</p>
-					<p tw="font-serif m-0 p-0 text-[24px] font-black">
+				<div tw="flex flex-col w-[350px] ">
+					<p tw="font-sans text-[64px]">{product?.name}</p>
+					<p tw="font-serif m-0 p-0 text-[24px]">
 						{product?.description}
 					</p>
 				</div>
