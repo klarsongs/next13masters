@@ -11,10 +11,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
 	children,
-	modal,
 }: {
 	children: React.ReactNode;
-	modal: React.ReactNode;
 }) {
 	return (
 		<html lang="pl">
@@ -26,7 +24,6 @@ export default function RootLayout({
 				<footer className="text-center text-sm text-gray-500">
 					<p>© 2023</p>
 				</footer>
-				{modal}
 			</body>
 		</html>
 	);
