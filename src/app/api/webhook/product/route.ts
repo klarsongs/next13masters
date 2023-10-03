@@ -4,6 +4,10 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function POST(request: NextRequest): Promise<Response> {
 	const body: unknown = await request.json();
 
+	console.log(`Received webhook: ${JSON.stringify(body)}`);
+	console.log(`Body type: ${typeof body}`);
+	console.log(`Body: ${JSON.stringify(body)}`);
+
 	if (
 		typeof body === "object" &&
 		body &&
