@@ -19,10 +19,14 @@ type ProductsListResponse = {
 export const getProductsList = async (
 	pageNumber: number,
 ): Promise<ProductsListResponse> => {
-	const graphqlRespose = await executeGraphql(
-		ProductsGetListDocument,
-		{ skip: (pageNumber - 1) * PER_PAGE },
-	);
+	const graphqlRespose = await executeGraphql({
+		query: ProductsGetListDocument,
+		variables: { skip: (pageNumber - 1) * PER_PAGE },
+		next: {
+			revalidate: 15,
+			tags: ["products"],
+		},
+	});
 
 	const products = graphqlRespose.products;
 
@@ -35,7 +39,13 @@ export const getProductsList = async (
 export const getProductById = async (
 	id: ProductListItemFragment["id"],
 ) => {
-	const data = await executeGraphql(ProductGetByIdDocument, { id });
+	const data = await executeGraphql({
+		query: ProductGetByIdDocument,
+		variables: { id },
+		next: {
+			revalidate: 1,
+		},
+	});
 
 	const product = data?.product;
 
@@ -46,10 +56,16 @@ export const getProductsByCategorySlug = async (
 	categorySlug: string,
 	pageNumber: number,
 ) => {
-	const data = await executeGraphql(
-		ProductsGetByCategorySlugDocument,
-		{ slug: categorySlug, skip: (pageNumber - 1) * PER_PAGE },
-	);
+	const data = await executeGraphql({
+		query: ProductsGetByCategorySlugDocument,
+		variables: {
+			slug: categorySlug,
+			skip: (pageNumber - 1) * PER_PAGE,
+		},
+		next: {
+			tags: ["products"],
+		},
+	});
 
 	const products = data.categories[0]?.products;
 
@@ -61,7 +77,9 @@ export const getProductsByCategorySlug = async (
 export const getProductsCategories = async (): Promise<
 	CategoryNameFragment[]
 > => {
-	const data = await executeGraphql(ProductsGetCategoriesDocument);
+	const data = await executeGraphql({
+		query: ProductsGetCategoriesDocument,
+	});
 
 	const categories = data.categories;
 
@@ -71,8 +89,14 @@ export const getProductsCategories = async (): Promise<
 export const getRelatedProducts = async (
 	id: string,
 ): Promise<ProductListItemFragment[]> => {
-	const data = await executeGraphql(ProductsGetRelatedDocument, {
-		id,
+	const data = await executeGraphql({
+		query: ProductsGetRelatedDocument,
+		variables: {
+			id,
+		},
+		next: {
+			tags: ["products"],
+		},
 	});
 
 	const relatedProducts = data.products;
@@ -81,8 +105,14 @@ export const getRelatedProducts = async (
 };
 
 export const getProductsBySearch = async (search: string) => {
-	const data = await executeGraphql(ProductsGetBySearchDocument, {
-		search,
+	const data = await executeGraphql({
+		query: ProductsGetBySearchDocument,
+		variables: {
+			search,
+		},
+		next: {
+			tags: ["products"],
+		},
 	});
 
 	const products = data.products;

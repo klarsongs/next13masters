@@ -5,21 +5,21 @@ import { getProductsByCategorySlug } from "@/api/products";
 import { Pagination } from "@/ui/molecules/Pagination";
 import { capitalizeSlug } from "@/utils";
 
-export const generateStaticParams = async ({
-	params,
-}: {
-	params: { category: string };
-}) => {
-	if (params.category === "t-shirts") {
-		return [
-			{ pageNumber: "1" },
-			{ pageNumber: "2" },
-			{ pageNumber: "3" },
-		];
-	} else {
-		return [{ pageNumber: "1" }];
-	}
-};
+// export const generateStaticParams = async ({
+// 	params,
+// }: {
+// 	params: { category: string };
+// }) => {
+// 	if (params.category === "t-shirts") {
+// 		return [
+// 			{ pageNumber: "1" },
+// 			{ pageNumber: "2" },
+// 			{ pageNumber: "3" },
+// 		];
+// 	} else {
+// 		return [{ pageNumber: "1" }];
+// 	}
+// };
 
 export const generateMetadata = async ({
 	params: { category },

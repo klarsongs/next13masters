@@ -1,10 +1,13 @@
 import { type Metadata } from "next";
 import { notFound } from "next/navigation";
+import { revalidateTag } from "next/cache";
+import { AddToCartButton } from "./AddToCartButton";
 import { getProductById, getRelatedProducts } from "@/api/products";
 import { ProductImage } from "@/ui/atoms/ProductImage";
 import { RelatedProducts } from "@/ui/organisms/RelatedProducts";
 import { ColorPicker } from "@/ui/molecules/ColorPicker";
 import { SizePicker } from "@/ui/molecules/SizePicker";
+import { addToCart, getOrCreateCart } from "@/api/cart";
 
 export const generateMetadata = async ({
 	params: { productId },
@@ -61,6 +64,18 @@ export default async function ProductPage({
 		),
 	];
 
+	async function addToCartAction(_formData: FormData): Promise<void> {
+		"use server";
+
+		const cart = await getOrCreateCart();
+		await addToCart(params.productId, cart.id);
+
+		// revalidate data
+		// revalidatePath("/cart");
+
+		revalidateTag("cart");
+	}
+
 	return (
 		<article className="mx-auto max-w-xl">
 			<h1 className="mb-4 mt-4 text-3xl font-bold">{product.name}</h1>
@@ -76,6 +91,10 @@ export default async function ProductPage({
 			{/* TODO: For each color check corresponding sizes */}
 			<ColorPicker colors={colors} />
 			<SizePicker sizes={sizes} />
+			<form action={addToCartAction}>
+				<input type="hidden" name="productId" value={product.id} />
+				<AddToCartButton />
+			</form>
 			<h2 className="mb-4 mt-12 text-2xl font-bold">
 				Related products
 			</h2>
