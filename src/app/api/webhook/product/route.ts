@@ -1,21 +1,15 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse, type NextRequest } from "next/server";
+import { type WebhookHygraph } from "../../types";
+import { type ProductListItemFragment } from "@/gql/graphql";
 
 export async function POST(request: NextRequest): Promise<Response> {
-	const body: unknown = await request.json();
+	const body =
+		(await request.json()) as WebhookHygraph<ProductListItemFragment>;
 
-	console.log(`Received webhook: ${JSON.stringify(body)}`);
-	console.log(`Body type: ${typeof body}`);
-	console.log(`Body: ${JSON.stringify(body)}`);
+	const data = body.data;
 
-	if (
-		typeof body === "object" &&
-		body &&
-		"__typename" in body &&
-		body.__typename === "Product" &&
-		"id" in body &&
-		typeof body.id === "string"
-	) {
+	if (data && data.__typename === "Product") {
 		console.log(`Revalidating products...`);
 		revalidateTag("products");
 
@@ -23,7 +17,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 		revalidatePath("/cart");
 
 		console.log(`Revalidating product page`);
-		revalidatePath(`/product/${body.id}`);
+		revalidatePath(`/product/${data.id}`);
 
 		return NextResponse.json(
 			{ message: "Revalidated!" },
