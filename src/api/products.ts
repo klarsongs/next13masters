@@ -64,7 +64,7 @@ export const getProductsByCategorySlug = async (
 			skip: (pageNumber - 1) * PER_PAGE,
 		},
 		next: {
-			tags: ["products"],
+			tags: ["products, categories"],
 		},
 	});
 
@@ -80,6 +80,9 @@ export const getProductsCategories = async (): Promise<
 > => {
 	const data = await executeGraphql({
 		query: ProductsGetCategoriesDocument,
+		next: {
+			tags: ["categories"],
+		},
 	});
 
 	const categories = data.categories;
@@ -96,7 +99,7 @@ export const getRelatedProducts = async (
 			id,
 		},
 		next: {
-			tags: ["products"],
+			tags: ["products", "categories"],
 		},
 	});
 
