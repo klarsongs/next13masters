@@ -23,7 +23,7 @@ export const getProductsList = async (
 		query: ProductsGetListDocument,
 		variables: { skip: (pageNumber - 1) * PER_PAGE },
 		next: {
-			revalidate: 15,
+			revalidate: 60 * 60,
 			tags: ["products"],
 		},
 	});
@@ -43,7 +43,7 @@ export const getProductById = async (
 		query: ProductGetByIdDocument,
 		variables: { id },
 		next: {
-			revalidate: 1,
+			revalidate: 15,
 		},
 	});
 
