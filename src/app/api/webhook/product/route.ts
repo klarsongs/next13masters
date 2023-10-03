@@ -10,9 +10,8 @@ export async function POST(request: NextRequest): Promise<Response> {
 	const data = body.data;
 
 	if (data && data.__typename === "Product") {
-		revalidatePath("/");
-		revalidatePath("/products/[pageNumber]");
-		revalidatePath("/categories/[category]/[pageNumber]");
+		console.log(`Revalidating products...`);
+		revalidateTag("products");
 
 		console.log(`Revalidating cart...`);
 		revalidatePath("/cart");
