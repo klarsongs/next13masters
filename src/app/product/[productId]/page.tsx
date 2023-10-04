@@ -8,6 +8,7 @@ import { RelatedProducts } from "@/ui/organisms/RelatedProducts";
 import { ColorPicker } from "@/ui/molecules/ColorPicker";
 import { SizePicker } from "@/ui/molecules/SizePicker";
 import { addToCart, getOrCreateCart } from "@/api/cart";
+import { ReviewsForm } from "@/ui/organisms/ReviewsForm";
 
 export const generateMetadata = async ({
 	params: { productId },
@@ -99,6 +100,10 @@ export default async function ProductPage({
 				Related products
 			</h2>
 			<RelatedProducts products={relatedProducts} />
+			<h2 className="mb-6 mt-12 text-2xl font-bold">
+				Customer reviews
+			</h2>
+			<ReviewsForm productId={product.id} />
 		</article>
 	);
 }

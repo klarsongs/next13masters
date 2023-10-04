@@ -1,0 +1,9 @@
+query ReviewsGetList($skip: Int!, $productId: ID!) {
+	reviews(
+		first: 5
+		skip: $skip
+		where: { product: { id: $productId } }
+	) {
+		...Review
+	}
+}
