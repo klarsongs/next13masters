@@ -93,7 +93,7 @@ export default async function ProductPage({
 			<SizePicker sizes={sizes} />
 			<form action={addToCartAction}>
 				<input type="hidden" name="productId" value={product.id} />
-				<AddToCartButton data-testid="add-to-cart-button" />
+				<AddToCartButton />
 			</form>
 			<h2 className="mb-4 mt-12 text-2xl font-bold">
 				Related products

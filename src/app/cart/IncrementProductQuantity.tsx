@@ -19,7 +19,7 @@ export const IncrementProductQuantity = ({
 	);
 	return (
 		<form>
-			{optimisticQuantity}
+			<span data-testid="quantity">{optimisticQuantity}</span>
 			<button
 				className="ml-2 h-8 w-8 border bg-slate-50"
 				type="submit"
