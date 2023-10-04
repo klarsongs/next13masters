@@ -4,6 +4,7 @@ import { experimental_useOptimistic as useOptimistic } from "react";
 import { Input } from "../atoms/Input";
 import { Textarea } from "../atoms/Textarea";
 import { InputRating } from "../atoms/InputRating";
+import { Review } from "../molecules/Review";
 import { addNewReview } from "@/app/product/[productId]/actions";
 import { type ReviewFragment } from "@/gql/graphql";
 import { formDataToObject } from "@/utils";
@@ -25,7 +26,7 @@ export function ReviewsList({
 	]);
 
 	return (
-		<div>
+		<section>
 			<form
 				data-testid="add-review-form"
 				action={async (formData: FormData) => {
@@ -69,12 +70,12 @@ export function ReviewsList({
 					Submit review
 				</button>
 			</form>
-			{optimisticReviews.map((m, k) => (
-				<div key={k} className="mt-6">
-					<p>{m.name}</p>
-					<p>{m.content}</p>
-				</div>
-			))}
-		</div>
+			<div className="mt-8">
+				<hr className="border-gray-100" />
+				{optimisticReviews.map((review) => (
+					<Review key={review.id} review={review} />
+				))}
+			</div>
+		</section>
 	);
 }
