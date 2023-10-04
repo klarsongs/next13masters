@@ -9,6 +9,7 @@ import {
 	removeItemCart,
 	updateItemInCart,
 } from "@/api/cart";
+import { type CartFragment } from "@/gql/graphql";
 
 export const removeItem = async (itemId: string) => {
 	return removeItemCart(itemId);
@@ -17,8 +18,9 @@ export const removeItem = async (itemId: string) => {
 export const changeItemQuantity = async (
 	itemId: string,
 	quantity: number,
+	cart: CartFragment,
 ) => {
-	await updateItemInCart(itemId, quantity);
+	await updateItemInCart(itemId, quantity, cart);
 	revalidateTag("cart");
 	return;
 };

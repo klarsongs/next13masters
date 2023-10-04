@@ -2,43 +2,13 @@ import { cookies } from "next/headers";
 import { executeGraphql } from "@/api/utils";
 
 import {
-	CartAddProductDocument,
-	CartCreateDocument,
-	type CartFragment,
 	CartGetByIdDocument,
 	ProductGetByIdDocument,
 	CartSetItemQuantityDocument,
 	CartRemoveProductDocument,
+	CartUpdateOrderDocument,
+	type CartFragment,
 } from "@/gql/graphql";
-
-export const getOrCreateCart = async (): Promise<CartFragment> => {
-	/**
-	 * Gets the cart ID from cookies. On the server. It is easier than using localStorage.
-	 * @returns {string | undefined} The cart ID if it exists, otherwise undefined.
-	 */
-	const cart = await getCartFromCookies();
-
-	if (cart) {
-		return cart;
-	}
-
-	const { createOrder: newCart } = await createCart();
-
-	if (!newCart) {
-		throw new Error("Failed to create cart");
-	}
-
-	cookies().set("cartId", newCart.id, {
-		httpOnly: true,
-		sameSite: "lax",
-		// TODO: Apply for production only
-		// secure: true
-		maxAge: 60 * 60 * 24 * 365,
-		expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
-	});
-
-	return newCart;
-};
 
 export const getCartFromCookies = async () => {
 	/**
@@ -64,14 +34,7 @@ export const getCartFromCookies = async () => {
 	}
 };
 
-export const createCart = async () => {
-	return executeGraphql({ query: CartCreateDocument });
-};
-
-export const addToCart = async (
-	productId: string,
-	orderId: string,
-) => {
+export const addToCart = async (productId: string) => {
 	const { product } = await executeGraphql({
 		query: ProductGetByIdDocument,
 		variables: {
@@ -87,30 +50,58 @@ export const addToCart = async (
 		throw new Error("Product not found");
 	}
 
-	// TODO: Handle adding mutliple products
-	await executeGraphql({
-		query: CartAddProductDocument,
+	const cart = await getCartFromCookies();
+
+	const orderItemInCart = cart?.orderItems?.find(
+		(item) => item?.product?.id === productId,
+	);
+
+	const newCart = await executeGraphql({
+		query: CartUpdateOrderDocument,
 		variables: {
-			orderId,
-			total: product.price,
+			orderId: cart?.id || "",
+			total: (orderItemInCart?.total ?? 0) + product.price,
+			orderItemId: orderItemInCart?.id || "",
 			productId,
+			quantity: (orderItemInCart?.quantity ?? 0) + 1,
+			orderTotal: (cart?.total ?? 0) + product.price,
 		},
-		cache: "no-store",
 		next: {
 			tags: ["cart"],
 		},
+		cache: "no-store",
 	});
+
+	if (!cart && newCart.upsertOrder?.id) {
+		cookies().set("cartId", newCart.upsertOrder.id, {
+			httpOnly: true,
+			sameSite: "lax",
+			// TODO: Apply for production only
+			// secure: true
+			maxAge: 60 * 60 * 24 * 365,
+			expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+		});
+	}
 };
 
 export async function updateItemInCart(
 	itemId: string,
 	quantity: number,
+	cart: CartFragment,
 ) {
+	const item = cart?.orderItems?.find((item) => item?.id === itemId);
+
+	const orderItemTotal = (item?.product?.price || 0) * quantity;
+	const orderTotal = (cart?.total || 0) + (item?.product?.price || 0);
+
 	return executeGraphql({
 		query: CartSetItemQuantityDocument,
 		variables: {
 			itemId,
 			quantity,
+			total: orderItemTotal,
+			orderTotal,
+			orderId: cart?.id || "",
 		},
 		cache: "no-store",
 		next: {

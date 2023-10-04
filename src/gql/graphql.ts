@@ -10715,28 +10715,14 @@ export type _SystemDateTimeFieldVariation =
   | 'combined'
   | 'localization';
 
-export type CartAddProductMutationVariables = Exact<{
-  orderId?: InputMaybe<Scalars['ID']['input']>;
-  total: Scalars['Int']['input'];
-  productId: Scalars['ID']['input'];
-}>;
-
-
-export type CartAddProductMutation = { createOrderItem?: { id: string } | null };
-
-export type CartCreateMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type CartCreateMutation = { createOrder?: { id: string, orderItems: Array<{ id: string, total: number, quantity: number, product?: { id: string, name: string, description: string, price: number } | null }> } | null };
-
 export type CartGetByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type CartGetByIdQuery = { order?: { id: string, orderItems: Array<{ id: string, total: number, quantity: number, product?: { id: string, name: string, description: string, price: number } | null }> } | null };
+export type CartGetByIdQuery = { order?: { id: string, total: number, orderItems: Array<{ id: string, total: number, quantity: number, product?: { id: string, name: string, description: string, price: number } | null }> } | null };
 
-export type CartFragment = { id: string, orderItems: Array<{ id: string, total: number, quantity: number, product?: { id: string, name: string, description: string, price: number } | null }> };
+export type CartFragment = { id: string, total: number, orderItems: Array<{ id: string, total: number, quantity: number, product?: { id: string, name: string, description: string, price: number } | null }> };
 
 export type CartRemoveProductMutationVariables = Exact<{
   itemId: Scalars['ID']['input'];
@@ -10748,10 +10734,25 @@ export type CartRemoveProductMutation = { deleteOrderItem?: { id: string } | nul
 export type CartSetItemQuantityMutationVariables = Exact<{
   itemId: Scalars['ID']['input'];
   quantity: Scalars['Int']['input'];
+  total: Scalars['Int']['input'];
+  orderId: Scalars['ID']['input'];
+  orderTotal: Scalars['Int']['input'];
 }>;
 
 
-export type CartSetItemQuantityMutation = { updateOrderItem?: { id: string, quantity: number } | null };
+export type CartSetItemQuantityMutation = { updateOrder?: { id: string } | null };
+
+export type CartUpdateOrderMutationVariables = Exact<{
+  total: Scalars['Int']['input'];
+  quantity: Scalars['Int']['input'];
+  orderItemId: Scalars['ID']['input'];
+  orderId: Scalars['ID']['input'];
+  productId: Scalars['ID']['input'];
+  orderTotal: Scalars['Int']['input'];
+}>;
+
+
+export type CartUpdateOrderMutation = { upsertOrder?: { id: string, total: number, orderItems: Array<{ id: string, total: number, quantity: number, product?: { id: string, name: string, description: string, price: number } | null }> } | null };
 
 export type CategoryNameFragment = { name: string, slug: string };
 
@@ -10856,6 +10857,7 @@ export class TypedDocumentString<TResult, TVariables>
 export const CartFragmentDoc = new TypedDocumentString(`
     fragment Cart on Order {
   id
+  total
   orderItems {
     id
     total
@@ -10916,35 +10918,6 @@ export const ReviewFragmentDoc = new TypedDocumentString(`
   name
 }
     `, {"fragmentName":"Review"}) as unknown as TypedDocumentString<ReviewFragment, unknown>;
-export const CartAddProductDocument = new TypedDocumentString(`
-    mutation CartAddProduct($orderId: ID, $total: Int!, $productId: ID!) {
-  createOrderItem(
-    data: {quantity: 1, total: $total, product: {connect: {id: $productId}}, order: {connect: {id: $orderId}}}
-  ) {
-    id
-  }
-}
-    `) as unknown as TypedDocumentString<CartAddProductMutation, CartAddProductMutationVariables>;
-export const CartCreateDocument = new TypedDocumentString(`
-    mutation CartCreate {
-  createOrder(data: {total: 0}) {
-    ...Cart
-  }
-}
-    fragment Cart on Order {
-  id
-  orderItems {
-    id
-    total
-    quantity
-    product {
-      id
-      name
-      description
-      price
-    }
-  }
-}`) as unknown as TypedDocumentString<CartCreateMutation, CartCreateMutationVariables>;
 export const CartGetByIdDocument = new TypedDocumentString(`
     query CartGetById($id: ID!) {
   order(where: {id: $id}, stage: DRAFT) {
@@ -10953,6 +10926,7 @@ export const CartGetByIdDocument = new TypedDocumentString(`
 }
     fragment Cart on Order {
   id
+  total
   orderItems {
     id
     total
@@ -10973,13 +10947,39 @@ export const CartRemoveProductDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<CartRemoveProductMutation, CartRemoveProductMutationVariables>;
 export const CartSetItemQuantityDocument = new TypedDocumentString(`
-    mutation CartSetItemQuantity($itemId: ID!, $quantity: Int!) {
-  updateOrderItem(where: {id: $itemId}, data: {quantity: $quantity}) {
+    mutation CartSetItemQuantity($itemId: ID!, $quantity: Int!, $total: Int!, $orderId: ID!, $orderTotal: Int!) {
+  updateOrder(
+    where: {id: $orderId}
+    data: {total: $orderTotal, orderItems: {update: {where: {id: $itemId}, data: {quantity: $quantity, total: $total}}}}
+  ) {
     id
-    quantity
   }
 }
     `) as unknown as TypedDocumentString<CartSetItemQuantityMutation, CartSetItemQuantityMutationVariables>;
+export const CartUpdateOrderDocument = new TypedDocumentString(`
+    mutation CartUpdateOrder($total: Int!, $quantity: Int!, $orderItemId: ID!, $orderId: ID!, $productId: ID!, $orderTotal: Int!) {
+  upsertOrder(
+    upsert: {create: {total: $orderTotal, orderItems: {create: {quantity: $quantity, total: $total, product: {connect: {id: $productId}}}}}, update: {total: $orderTotal, orderItems: {upsert: {where: {id: $orderItemId}, data: {create: {quantity: $quantity, total: $total, product: {connect: {id: $productId}}}, update: {quantity: $quantity, total: $total, product: {connect: {id: $productId}}}}}}}}
+    where: {id: $orderId}
+  ) {
+    ...Cart
+  }
+}
+    fragment Cart on Order {
+  id
+  total
+  orderItems {
+    id
+    total
+    quantity
+    product {
+      id
+      name
+      description
+      price
+    }
+  }
+}`) as unknown as TypedDocumentString<CartUpdateOrderMutation, CartUpdateOrderMutationVariables>;
 export const CollectionGetByCollectionSlugDocument = new TypedDocumentString(`
     query CollectionGetByCollectionSlug($slug: String) {
   collections(where: {slug: $slug}) {

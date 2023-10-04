@@ -10,10 +10,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 	const data = body.data;
 
 	if (data && data.__typename === "Product") {
-		console.log(`Revalidating products...`);
 		revalidateTag("products");
-
-		console.log(`Revalidating cart...`);
 		revalidatePath("/cart");
 
 		return NextResponse.json(
@@ -37,10 +34,7 @@ export async function DELETE(
 	const data = body.data;
 
 	if (data && data.__typename === "Product") {
-		console.log(`Revalidating products...`);
 		revalidateTag("products");
-
-		console.log(`Revalidating cart...`);
 		revalidatePath("/cart");
 
 		return NextResponse.json(

@@ -7,7 +7,7 @@ import { ProductImage } from "@/ui/atoms/ProductImage";
 import { RelatedProducts } from "@/ui/organisms/RelatedProducts";
 import { ColorPicker } from "@/ui/molecules/ColorPicker";
 import { SizePicker } from "@/ui/molecules/SizePicker";
-import { addToCart, getOrCreateCart } from "@/api/cart";
+import { addToCart } from "@/api/cart";
 import { Reviews } from "@/ui/organisms/Reviews";
 
 export const generateMetadata = async ({
@@ -68,8 +68,7 @@ export default async function ProductPage({
 	async function addToCartAction(_formData: FormData): Promise<void> {
 		"use server";
 
-		const cart = await getOrCreateCart();
-		await addToCart(params.productId, cart.id);
+		await addToCart(params.productId);
 
 		// revalidate data
 		// revalidatePath("/cart");
@@ -94,7 +93,7 @@ export default async function ProductPage({
 			<SizePicker sizes={sizes} />
 			<form action={addToCartAction}>
 				<input type="hidden" name="productId" value={product.id} />
-				<AddToCartButton />
+				<AddToCartButton data-testid="add-to-cart-button" />
 			</form>
 			<h2 className="mb-4 mt-12 text-2xl font-bold">
 				Related products

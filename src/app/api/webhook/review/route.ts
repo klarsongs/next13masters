@@ -10,7 +10,6 @@ export async function POST(request: NextRequest): Promise<Response> {
 	const data = body.data;
 
 	if (data && data.__typename === "Product") {
-		console.log(`Revalidating reviews...`);
 		revalidateTag("reviews");
 
 		return NextResponse.json(
@@ -35,7 +34,6 @@ export async function DELETE(
 	const data = body.data;
 
 	if (data && data.__typename === "Product") {
-		console.log(`Revalidating reviews...`);
 		revalidateTag("reviews");
 
 		return NextResponse.json(

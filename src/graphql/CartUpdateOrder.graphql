@@ -1,0 +1,46 @@
+mutation CartUpdateOrder(
+	$total: Int!
+	$quantity: Int!
+	$orderItemId: ID!
+	$orderId: ID!
+	$productId: ID!
+	$orderTotal: Int!
+) {
+	upsertOrder(
+		upsert: {
+			create: {
+				total: $orderTotal
+				orderItems: {
+					create: {
+						quantity: $quantity
+						total: $total
+						product: { connect: { id: $productId } }
+					}
+				}
+			}
+			update: {
+				total: $orderTotal
+				orderItems: {
+					upsert: {
+						where: { id: $orderItemId }
+						data: {
+							create: {
+								quantity: $quantity
+								total: $total
+								product: { connect: { id: $productId } }
+							}
+							update: {
+								quantity: $quantity
+								total: $total
+								product: { connect: { id: $productId } }
+							}
+						}
+					}
+				}
+			}
+		}
+		where: { id: $orderId }
+	) {
+		...Cart
+	}
+}
