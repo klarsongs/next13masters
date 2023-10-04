@@ -36,7 +36,7 @@ export function ReviewsList({
 
 					const review = {
 						headline: data.headline,
-						content: formData.get("content")?.toString() || "",
+						content: data.content,
 						rating: Number(formData.get("rating")),
 						name: data.name,
 					};
