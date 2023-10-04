@@ -89,10 +89,18 @@ export async function updateItemInCart(
 	quantity: number,
 	cart: CartFragment,
 ) {
+	if (quantity === 0) {
+		return removeItemCart(itemId, cart);
+	}
+
 	const item = cart?.orderItems?.find((item) => item?.id === itemId);
+	const previousQuantity = item?.quantity || 0;
 
 	const orderItemTotal = (item?.product?.price || 0) * quantity;
-	const orderTotal = (cart?.total || 0) + (item?.product?.price || 0);
+	const orderTotal =
+		previousQuantity > quantity
+			? (cart?.total || 0) - (item?.product?.price || 0)
+			: (cart?.total || 0) + (item?.product?.price || 0);
 
 	return executeGraphql({
 		query: CartSetItemQuantityDocument,
@@ -110,11 +118,20 @@ export async function updateItemInCart(
 	});
 }
 
-export async function removeItemCart(itemId: string) {
+export async function removeItemCart(
+	itemId: string,
+	cart: CartFragment,
+) {
+	const item = cart?.orderItems?.find((item) => item?.id === itemId);
+
+	const orderTotal = (cart?.total || 0) - (item?.product?.price || 0);
+
 	return executeGraphql({
 		query: CartRemoveProductDocument,
 		variables: {
 			itemId,
+			orderTotal,
+			orderId: cart?.id || "",
 		},
 		cache: "no-store",
 		next: {

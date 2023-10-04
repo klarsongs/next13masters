@@ -1,5 +1,15 @@
-mutation CartRemoveProduct($itemId: ID!) {
-	deleteOrderItem(where: { id: $itemId }) {
-		id
+mutation CartRemoveProduct(
+	$itemId: ID!
+	$orderId: ID!
+	$orderTotal: Int!
+) {
+	updateOrder(
+		where: { id: $orderId }
+		data: {
+			total: $orderTotal
+			orderItems: { delete: { id: $itemId } }
+		}
+	) {
+		...Cart
 	}
 }

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { IncrementProductQuantity } from "./IncrementProductQuantity";
+import { ChangeProductQuantity } from "./ChangeProductQuantity";
 import { RemoveButton } from "./RemoveButton";
 import { handlePaymentAction } from "./actions";
 import { getCartFromCookies } from "@/api/cart";
@@ -14,13 +14,13 @@ export default async function CartPage() {
 
 	return (
 		<div className="mt-10">
-			<h1>Order #{cart.id} summary</h1>
-			<table>
+			<h1 className="mb-8 mt-12 text-3xl font-bold">Order summary</h1>
+			<table className="w-full">
 				<thead>
 					<tr>
-						<th>Product</th>
-						<th className="px-4">Amount</th>
-						<th>Price</th>
+						<th className="text-left">Product</th>
+						<th className="text-left">Amount</th>
+						<th className="text-left">Price</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -29,8 +29,8 @@ export default async function CartPage() {
 							item.product && (
 								<tr key={item.product.id}>
 									<td>{item.product.name}</td>
-									<td className="text-center">
-										<IncrementProductQuantity
+									<td>
+										<ChangeProductQuantity
 											quantity={item.quantity}
 											itemId={item.id}
 											cart={cart}
@@ -39,22 +39,30 @@ export default async function CartPage() {
 									<td>
 										{formatMoney(item.product.price * item.quantity)}
 									</td>
-									<td>
-										<RemoveButton itemId={item.id} />
+									<td className="text-right">
+										<RemoveButton itemId={item.id} cart={cart} />
 									</td>
 								</tr>
 							),
 					)}
 				</tbody>
 			</table>
-			<form action={handlePaymentAction}>
-				<button
-					type="submit"
-					className="mt-6 rounded-full bg-green-300 px-6 py-2 shadow-lg transition-colors hover:bg-green-200 disabled:cursor-wait disabled:bg-slate-200 disabled:text-slate-400"
-				>
-					Pay
-				</button>
-			</form>
+			<hr className="border-grey-100 mt-12" />
+			<div className="mt-8 text-right">
+				<div className=" flex justify-end">
+					<p className="text-left text-lg">
+						Total: <strong>{formatMoney(cart.total)}</strong>
+					</p>
+				</div>
+				<form action={handlePaymentAction}>
+					<button
+						type="submit"
+						className="mt-6 w-44 rounded-full bg-green-300 px-6 py-2 shadow-lg transition-colors hover:bg-green-200 disabled:cursor-wait disabled:bg-slate-200 disabled:text-slate-400"
+					>
+						Pay
+					</button>
+				</form>
+			</div>
 		</div>
 	);
 }

@@ -4,7 +4,7 @@ import { experimental_useOptimistic as useOptimistic } from "react";
 import { changeItemQuantity } from "./actions";
 import { type CartFragment } from "@/gql/graphql";
 
-export const IncrementProductQuantity = ({
+export const ChangeProductQuantity = ({
 	quantity,
 	itemId,
 	cart,
@@ -19,9 +19,27 @@ export const IncrementProductQuantity = ({
 	);
 	return (
 		<form>
-			<span data-testid="quantity">{optimisticQuantity}</span>
 			<button
-				className="ml-2 h-8 w-8 border bg-slate-50"
+				data-testid="decrement"
+				className="h-8 w-8 border bg-slate-50 hover:bg-slate-100"
+				type="submit"
+				formAction={async () => {
+					setOptimisticQuantity(optimisticQuantity - 1);
+					await changeItemQuantity(
+						itemId,
+						optimisticQuantity - 1,
+						cart,
+					);
+				}}
+			>
+				-
+			</button>
+			<span data-testid="quantity" className="mx-4">
+				{optimisticQuantity}
+			</span>
+			<button
+				data-testid="increment"
+				className="h-8 w-8 border bg-slate-50 hover:bg-slate-100"
 				type="submit"
 				formAction={async () => {
 					setOptimisticQuantity(optimisticQuantity + 1);

@@ -3,8 +3,15 @@
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { removeItem } from "./actions";
+import { type CartFragment } from "@/gql/graphql";
 
-export const RemoveButton = ({ itemId }: { itemId: string }) => {
+export const RemoveButton = ({
+	itemId,
+	cart,
+}: {
+	itemId: string;
+	cart: CartFragment;
+}) => {
 	const [isPending, startTransition] = useTransition();
 	const router = useRouter();
 
@@ -14,7 +21,7 @@ export const RemoveButton = ({ itemId }: { itemId: string }) => {
 			disabled={isPending}
 			onClick={() => {
 				startTransition(async () => {
-					await removeItem(itemId);
+					await removeItem(itemId, cart);
 					router.refresh();
 				});
 			}}
