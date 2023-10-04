@@ -11251,7 +11251,12 @@ export const ReviewsAddReviewDocument = new TypedDocumentString(`
     `) as unknown as TypedDocumentString<ReviewsAddReviewMutation, ReviewsAddReviewMutationVariables>;
 export const ReviewsGetListDocument = new TypedDocumentString(`
     query ReviewsGetList($skip: Int!, $productId: ID!) {
-  reviews(first: 5, skip: $skip, where: {product: {id: $productId}}) {
+  reviews(
+    first: 5
+    skip: $skip
+    orderBy: createdAt_DESC
+    where: {product: {id: $productId}}
+  ) {
     ...Review
   }
 }
