@@ -40,7 +40,7 @@ export const NavBar = async () => {
 			</ul>
 			<div className="flex items-center gap-6">
 				<Search />
-				{quantity && quantity > 0 && (
+				{quantity && quantity > 0 ? (
 					<div>
 						<Link
 							href="/cart"
@@ -53,7 +53,7 @@ export const NavBar = async () => {
 							<span className="sr-only">View cart</span>
 						</Link>
 					</div>
-				)}
+				) : null}
 			</div>
 		</nav>
 	);
