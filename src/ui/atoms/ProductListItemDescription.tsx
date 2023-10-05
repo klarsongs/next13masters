@@ -23,11 +23,11 @@ export const ProductListItemDescription = ({
 				)}
 			</div>
 			<div className="flex flex-col items-end justify-start">
-				<p
-					className="text-sm font-bold text-gray-900"
-					data-testid="product-price"
-				>
-					<span className="sr-only">Cena:</span> {formatMoney(price)}
+				<p className="text-sm font-bold text-gray-900">
+					<span className="sr-only">Cena:</span>
+					<span data-testid="product-price">
+						{formatMoney(price)}
+					</span>
 				</p>
 				{rating && (
 					<div className="text-sm font-medium text-gray-900">
