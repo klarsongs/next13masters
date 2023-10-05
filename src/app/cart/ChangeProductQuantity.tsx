@@ -23,8 +23,8 @@ export const ChangeProductQuantity = ({
 				data-testid="decrement"
 				className="h-8 w-8 border bg-slate-50 hover:bg-slate-100"
 				type="submit"
+				onClick={() => setOptimisticQuantity(optimisticQuantity)}
 				formAction={async () => {
-					setOptimisticQuantity(optimisticQuantity - 1);
 					await changeItemQuantity(
 						itemId,
 						optimisticQuantity - 1,
@@ -41,13 +41,9 @@ export const ChangeProductQuantity = ({
 				data-testid="increment"
 				className="h-8 w-8 border bg-slate-50 hover:bg-slate-100"
 				type="submit"
+				onClick={() => setOptimisticQuantity(optimisticQuantity + 1)}
 				formAction={async () => {
-					setOptimisticQuantity(optimisticQuantity + 1);
-					await changeItemQuantity(
-						itemId,
-						optimisticQuantity + 1,
-						cart,
-					);
+					await changeItemQuantity(itemId, optimisticQuantity, cart);
 				}}
 			>
 				+
