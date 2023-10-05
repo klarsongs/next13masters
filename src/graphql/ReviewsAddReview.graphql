@@ -17,5 +17,12 @@ mutation ReviewsAddReview(
 		}
 	) {
 		id
+		product {
+			rating
+			reviews {
+				id
+				rating
+			}
+		}
 	}
 }

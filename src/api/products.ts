@@ -9,6 +9,7 @@ import {
 	type CategoryNameFragment,
 	ProductsGetRelatedDocument,
 	ProductsGetBySearchDocument,
+	type ProductOrderByInput,
 } from "@/gql/graphql";
 
 type ProductsListResponse = {
@@ -18,12 +19,13 @@ type ProductsListResponse = {
 
 export const getProductsList = async (
 	pageNumber: number,
+	orderBy?: ProductOrderByInput,
 ): Promise<ProductsListResponse> => {
 	const graphqlRespose = await executeGraphql({
 		query: ProductsGetListDocument,
-		variables: { skip: (pageNumber - 1) * PER_PAGE },
+		variables: { skip: (pageNumber - 1) * PER_PAGE, orderBy },
 		next: {
-			revalidate: 60 * 60,
+			revalidate: 15,
 			tags: ["products"],
 		},
 	});
@@ -64,6 +66,7 @@ export const getProductsByCategorySlug = async (
 			skip: (pageNumber - 1) * PER_PAGE,
 		},
 		next: {
+			revalidate: 15,
 			tags: ["products, categories"],
 		},
 	});

@@ -1,5 +1,19 @@
-mutation ReviewPublish($reviewId: ID) {
+mutation ReviewPublish(
+	$reviewId: ID!
+	$productId: ID!
+	$averageRating: Float!
+) {
 	publishReview(where: { id: $reviewId }, to: PUBLISHED) {
 		id
+	}
+	updateProduct(
+		where: { id: $productId }
+		data: { rating: $averageRating }
+	) {
+		id
+		rating
+	}
+	publishProduct(where: { id: $productId }, to: PUBLISHED) {
+		...ProductListItem
 	}
 }

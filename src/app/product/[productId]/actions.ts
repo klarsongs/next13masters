@@ -16,4 +16,5 @@ export const addNewReview = async (
 	});
 
 	revalidateTag("reviews");
+	revalidateTag("products");
 };

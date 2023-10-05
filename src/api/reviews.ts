@@ -1,9 +1,18 @@
 import { executeGraphql } from "./utils";
 import {
 	ReviewsAddReviewDocument,
-	ReviewsGetListDocument,
 	ReviewPublishDocument,
+	ReviewsGetListDocument,
 } from "@/gql/graphql";
+
+const calculateAverageRating = (reviews: { rating: number }[]) => {
+	const totalRating = reviews.reduce(
+		(acc, review) => acc + review.rating,
+		0,
+	);
+	const averageRating = totalRating / reviews.length;
+	return averageRating;
+};
 
 export const getReviews = async (productId: string) => {
 	const data = await executeGraphql({
@@ -55,10 +64,20 @@ export async function addReview({
 
 	const reviewId = data?.createReview?.id;
 
+	if (!reviewId) {
+		throw Error("Review cannot be published");
+	}
+
+	const newRating = calculateAverageRating(
+		data?.createReview?.product?.reviews || [],
+	);
+
 	return executeGraphql({
 		query: ReviewPublishDocument,
 		variables: {
 			reviewId,
+			productId,
+			averageRating: newRating,
 		},
 		cache: "no-store",
 		next: {
