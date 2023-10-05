@@ -12,3 +12,12 @@ export const capitalizeSlug = (slug: string) => {
 		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
 		.join(" ");
 };
+
+export const formDataToObject = <T extends Record<string, string>>(
+	formData: FormData,
+): T => {
+	return Array.from(formData.entries()).reduce(
+		(obj, [key, value]) => ({ ...obj, [key]: value.toString() }),
+		{} as T,
+	);
+};

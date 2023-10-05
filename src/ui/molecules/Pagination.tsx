@@ -15,7 +15,9 @@ export const Pagination = ({
 		<ul className="flex gap-4" aria-label="pagination">
 			{Array.from({ length: pages }, (_, i) => (
 				<li key={`pagination-${i}`}>
-					<ActiveLink href={nextHref(i + 1)}>{i + 1}</ActiveLink>
+					<ActiveLink href={nextHref(i + 1)} exact={false}>
+						{i + 1}
+					</ActiveLink>
 				</li>
 			))}
 		</ul>

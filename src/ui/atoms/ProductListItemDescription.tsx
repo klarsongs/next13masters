@@ -1,3 +1,4 @@
+import { AverageRating } from "./AverageRating";
 import { type ProductListItemFragment } from "@/gql/graphql";
 import { formatMoney } from "@/utils";
 
@@ -6,7 +7,7 @@ type ProductListItemDescriptionProps = {
 };
 
 export const ProductListItemDescription = ({
-	product: { name, price, categories },
+	product: { name, price, categories, rating },
 }: ProductListItemDescriptionProps) => {
 	return (
 		<div className="mt-2 flex justify-between">
@@ -21,9 +22,20 @@ export const ProductListItemDescription = ({
 					</p>
 				)}
 			</div>
-			<p className="text-sm font-medium text-gray-900">
-				<span className="sr-only">Cena:</span> {formatMoney(price)}
-			</p>
+			<div className="flex flex-col items-end justify-start">
+				<p className="text-sm font-bold text-gray-900">
+					<span className="sr-only">Cena:</span>
+					<span data-testid="product-price">
+						{formatMoney(price)}
+					</span>
+				</p>
+				{rating && (
+					<div className="text-sm font-medium text-gray-900">
+						<span className="sr-only">Stars:</span>
+						<AverageRating rating={rating} />
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };

@@ -1,5 +1,5 @@
-query ProductsGetList($skip: Int) {
-	products(first: 12, skip: $skip) {
+query ProductsGetList($skip: Int, $orderBy: ProductOrderByInput) {
+	products(first: 12, skip: $skip, orderBy: $orderBy) {
 		...ProductListItem
 	}
 	productsConnection {

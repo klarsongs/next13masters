@@ -4,6 +4,9 @@ const nextConfig = {
 	experimental: {
 		typedRoutes: true,
 		mdxRs: true,
+		serverActions: true,
+		workerThreads: false,
+		cpus: 1,
 	},
 	images: {
 		remotePatterns: [
