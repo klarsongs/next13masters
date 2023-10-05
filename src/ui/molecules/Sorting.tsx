@@ -21,9 +21,9 @@ export const Sorting = ({
 	return (
 		<div
 			className={clsx(
-				"translate-x-full opacity-0 transition-transform",
-				!loaded && "invisible",
+				"opacity-0 transition-transform",
 				loaded && "visible translate-x-0 opacity-100",
+				!loaded && "invisible translate-x-full",
 			)}
 		>
 			<div className="flex gap-6">
