@@ -24,8 +24,7 @@ export const getCartFromCookies = async () => {
 				id: cartId,
 			},
 			next: {
-				tags: ["cart"],
-				revalidate: 1,
+				revalidate: 0,
 			},
 			cache: "no-store",
 		});
