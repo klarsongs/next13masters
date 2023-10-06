@@ -22,6 +22,9 @@ const documents = {
     "fragment CategoryName on Category {\n  name\n  slug\n}": types.CategoryNameFragmentDoc,
     "query CollectionGetByCollectionSlug($slug: String) {\n  collections(where: {slug: $slug}) {\n    name\n    description\n    products {\n      ...ProductListItem\n    }\n  }\n}": types.CollectionGetByCollectionSlugDocument,
     "query CollectionsList {\n  collections {\n    name\n    slug\n  }\n}": types.CollectionsListDocument,
+    "mutation OrderPublish($id: ID!) {\n  publishOrder(where: {id: $id}, to: PUBLISHED) {\n    id\n  }\n  publishManyOrderItemsConnection(to: PUBLISHED, where: {order: {id: $id}}) {\n    aggregate {\n      count\n    }\n  }\n}": types.OrderPublishDocument,
+    "mutation OrderUpdateEmail($email: String, $stripeId: String, $id: ID!, $total: Int, $userId: String) {\n  updateOrder(\n    data: {email: $email, stripeCheckoutId: $stripeId, total: $total, userId: $userId}\n    where: {id: $id}\n  ) {\n    id\n  }\n}": types.OrderUpdateEmailDocument,
+    "query OrderGetByUserId($userId: String!) {\n  orders(where: {userId: $userId}) {\n    ...Cart\n  }\n}": types.OrderGetByUserIdDocument,
     "fragment ProductListItem on Product {\n  id\n  name\n  description\n  categories(first: 1) {\n    name\n  }\n  images(first: 1) {\n    url\n  }\n  price\n  rating\n  variants {\n    ... on ProductColorVariant {\n      id\n      color\n      __typename\n    }\n    ... on ProductSizeColorVariant {\n      id\n      color\n      size\n      __typename\n    }\n    ... on ProductSizeVariant {\n      id\n      size\n      __typename\n    }\n  }\n}": types.ProductListItemFragmentDoc,
     "query ProductsGetByCategorySlug($slug: String, $skip: Int) {\n  categories(where: {slug: $slug}) {\n    products(first: 10, skip: $skip) {\n      ...ProductListItem\n    }\n  }\n  productsConnection(where: {categories_some: {slug: $slug}}) {\n    aggregate {\n      count\n    }\n  }\n}": types.ProductsGetByCategorySlugDocument,
     "query ProductGetById($id: ID!) {\n  product(where: {id: $id}) {\n    ...ProductListItem\n  }\n}": types.ProductGetByIdDocument,
@@ -67,6 +70,18 @@ export function graphql(source: "query CollectionGetByCollectionSlug($slug: Stri
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "query CollectionsList {\n  collections {\n    name\n    slug\n  }\n}"): typeof import('./graphql').CollectionsListDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "mutation OrderPublish($id: ID!) {\n  publishOrder(where: {id: $id}, to: PUBLISHED) {\n    id\n  }\n  publishManyOrderItemsConnection(to: PUBLISHED, where: {order: {id: $id}}) {\n    aggregate {\n      count\n    }\n  }\n}"): typeof import('./graphql').OrderPublishDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "mutation OrderUpdateEmail($email: String, $stripeId: String, $id: ID!, $total: Int, $userId: String) {\n  updateOrder(\n    data: {email: $email, stripeCheckoutId: $stripeId, total: $total, userId: $userId}\n    where: {id: $id}\n  ) {\n    id\n  }\n}"): typeof import('./graphql').OrderUpdateEmailDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query OrderGetByUserId($userId: String!) {\n  orders(where: {userId: $userId}) {\n    ...Cart\n  }\n}"): typeof import('./graphql').OrderGetByUserIdDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

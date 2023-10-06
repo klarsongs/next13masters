@@ -4523,6 +4523,7 @@ export type Order = Node & {
   updatedAt: Scalars['DateTime']['output'];
   /** User that last updated this document */
   updatedBy?: Maybe<User>;
+  userId?: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -4605,6 +4606,7 @@ export type OrderCreateInput = {
   stripeCheckoutId?: InputMaybe<Scalars['String']['input']>;
   total: Scalars['Int']['input'];
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type OrderCreateManyInlineInput = {
@@ -5244,6 +5246,25 @@ export type OrderManyWhereInput = {
   /** All values that are not contained in given list. */
   updatedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
   updatedBy?: InputMaybe<UserWhereInput>;
+  userId?: InputMaybe<Scalars['String']['input']>;
+  /** All values containing the given string. */
+  userId_contains?: InputMaybe<Scalars['String']['input']>;
+  /** All values ending with the given string. */
+  userId_ends_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values that are contained in given list. */
+  userId_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Any other value that exists and is not equal to the given value. */
+  userId_not?: InputMaybe<Scalars['String']['input']>;
+  /** All values not containing the given string. */
+  userId_not_contains?: InputMaybe<Scalars['String']['input']>;
+  /** All values not ending with the given string */
+  userId_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values that are not contained in given list. */
+  userId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** All values not starting with the given string. */
+  userId_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values starting with the given string. */
+  userId_starts_with?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type OrderOrderByInput =
@@ -5260,13 +5281,16 @@ export type OrderOrderByInput =
   | 'total_ASC'
   | 'total_DESC'
   | 'updatedAt_ASC'
-  | 'updatedAt_DESC';
+  | 'updatedAt_DESC'
+  | 'userId_ASC'
+  | 'userId_DESC';
 
 export type OrderUpdateInput = {
   email?: InputMaybe<Scalars['String']['input']>;
   orderItems?: InputMaybe<OrderItemUpdateManyInlineInput>;
   stripeCheckoutId?: InputMaybe<Scalars['String']['input']>;
   total?: InputMaybe<Scalars['Int']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type OrderUpdateManyInlineInput = {
@@ -5290,6 +5314,7 @@ export type OrderUpdateManyInput = {
   email?: InputMaybe<Scalars['String']['input']>;
   stripeCheckoutId?: InputMaybe<Scalars['String']['input']>;
   total?: InputMaybe<Scalars['Int']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type OrderUpdateManyWithNestedWhereInput = {
@@ -5480,6 +5505,25 @@ export type OrderWhereInput = {
   /** All values that are not contained in given list. */
   updatedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
   updatedBy?: InputMaybe<UserWhereInput>;
+  userId?: InputMaybe<Scalars['String']['input']>;
+  /** All values containing the given string. */
+  userId_contains?: InputMaybe<Scalars['String']['input']>;
+  /** All values ending with the given string. */
+  userId_ends_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values that are contained in given list. */
+  userId_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Any other value that exists and is not equal to the given value. */
+  userId_not?: InputMaybe<Scalars['String']['input']>;
+  /** All values not containing the given string. */
+  userId_not_contains?: InputMaybe<Scalars['String']['input']>;
+  /** All values not ending with the given string */
+  userId_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values that are not contained in given list. */
+  userId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** All values not starting with the given string. */
+  userId_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values starting with the given string. */
+  userId_starts_with?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The document in stages filter allows specifying a stage entry to cross compare the same document between different stages */
@@ -10807,6 +10851,31 @@ export type CollectionsListQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type CollectionsListQuery = { collections: Array<{ name: string, slug: string }> };
 
+export type OrderPublishMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type OrderPublishMutation = { publishOrder?: { id: string } | null, publishManyOrderItemsConnection: { aggregate: { count: number } } };
+
+export type OrderUpdateEmailMutationVariables = Exact<{
+  email?: InputMaybe<Scalars['String']['input']>;
+  stripeId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  total?: InputMaybe<Scalars['Int']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type OrderUpdateEmailMutation = { updateOrder?: { id: string } | null };
+
+export type OrderGetByUserIdQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type OrderGetByUserIdQuery = { orders: Array<{ id: string, total: number, orderItems: Array<{ id: string, total: number, quantity: number, product?: { id: string, name: string, description: string, price: number } | null }> }> };
+
 export type ProductListItemFragment = { id: string, name: string, description: string, price: number, rating?: number | null, categories: Array<{ name: string }>, images: Array<{ url: string }>, variants: Array<{ __typename: 'ProductColorVariant', id: string, color: ProductColor } | { __typename: 'ProductSizeColorVariant', id: string, color: ProductColor, size: ProductSize } | { __typename: 'ProductSizeVariant', id: string, size: ProductSize }> };
 
 export type ProductsGetByCategorySlugQueryVariables = Exact<{
@@ -11089,6 +11158,49 @@ export const CollectionsListDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<CollectionsListQuery, CollectionsListQueryVariables>;
+export const OrderPublishDocument = new TypedDocumentString(`
+    mutation OrderPublish($id: ID!) {
+  publishOrder(where: {id: $id}, to: PUBLISHED) {
+    id
+  }
+  publishManyOrderItemsConnection(to: PUBLISHED, where: {order: {id: $id}}) {
+    aggregate {
+      count
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<OrderPublishMutation, OrderPublishMutationVariables>;
+export const OrderUpdateEmailDocument = new TypedDocumentString(`
+    mutation OrderUpdateEmail($email: String, $stripeId: String, $id: ID!, $total: Int, $userId: String) {
+  updateOrder(
+    data: {email: $email, stripeCheckoutId: $stripeId, total: $total, userId: $userId}
+    where: {id: $id}
+  ) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<OrderUpdateEmailMutation, OrderUpdateEmailMutationVariables>;
+export const OrderGetByUserIdDocument = new TypedDocumentString(`
+    query OrderGetByUserId($userId: String!) {
+  orders(where: {userId: $userId}) {
+    ...Cart
+  }
+}
+    fragment Cart on Order {
+  id
+  total
+  orderItems {
+    id
+    total
+    quantity
+    product {
+      id
+      name
+      description
+      price
+    }
+  }
+}`) as unknown as TypedDocumentString<OrderGetByUserIdQuery, OrderGetByUserIdQueryVariables>;
 export const ProductsGetByCategorySlugDocument = new TypedDocumentString(`
     query ProductsGetByCategorySlug($slug: String, $skip: Int) {
   categories(where: {slug: $slug}) {

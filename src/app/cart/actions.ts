@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidateTag } from "next/cache";
+import { currentUser } from "@clerk/nextjs";
 import Stripe from "stripe";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -10,6 +11,7 @@ import {
 	updateItemInCart,
 } from "@/api/cart";
 import { type CartFragment } from "@/gql/graphql";
+import { publishOrder, updateOrderEmail } from "@/api/orders";
 
 export const removeItem = async (
 	itemId: string,
@@ -40,6 +42,7 @@ export async function handlePaymentAction(): Promise<void> {
 		throw new Error("Missing Stripe secret key");
 	}
 
+	const user = await currentUser();
 	const cart = await getCartFromCookies();
 
 	if (!cart) {
@@ -75,6 +78,15 @@ export async function handlePaymentAction(): Promise<void> {
 		throw new Error("Missing checkout session url");
 	}
 
+	await updateOrderEmail(
+		cart.id,
+		user?.emailAddresses[0]?.emailAddress,
+		checkoutSession.id,
+		checkoutSession.amount_total || 0,
+		user?.id,
+	);
+
+	await publishOrder(cart.id);
 	cookies().set("cartId", "");
 	redirect(checkoutSession.url);
 }

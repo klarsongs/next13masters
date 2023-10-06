@@ -1,6 +1,6 @@
 import { type Metadata } from "next";
 import { notFound } from "next/navigation";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { AddToCartButton } from "./AddToCartButton";
 import { getProductById, getRelatedProducts } from "@/api/products";
 import { ProductImage } from "@/ui/atoms/ProductImage";
@@ -71,8 +71,7 @@ export default async function ProductPage({
 		await addToCart(params.productId);
 
 		// revalidate data
-		// revalidatePath("/cart");
-
+		revalidatePath("/cart");
 		revalidateTag("cart");
 	}
 

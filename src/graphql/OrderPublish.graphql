@@ -1,0 +1,13 @@
+mutation OrderPublish($id: ID!) {
+	publishOrder(where: { id: $id }, to: PUBLISHED) {
+		id
+	}
+	publishManyOrderItemsConnection(
+		to: PUBLISHED
+		where: { order: { id: $id } }
+	) {
+		aggregate {
+			count
+		}
+	}
+}

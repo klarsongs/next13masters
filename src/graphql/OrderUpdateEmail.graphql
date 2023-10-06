@@ -1,0 +1,19 @@
+mutation OrderUpdateEmail(
+	$email: String
+	$stripeId: String
+	$id: ID!
+	$total: Int
+	$userId: String
+) {
+	updateOrder(
+		data: {
+			email: $email
+			stripeCheckoutId: $stripeId
+			total: $total
+			userId: $userId
+		}
+		where: { id: $id }
+	) {
+		id
+	}
+}

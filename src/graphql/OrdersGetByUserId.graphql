@@ -1,0 +1,5 @@
+query OrderGetByUserId($userId: String!) {
+	orders(where: { userId: $userId }) {
+		...Cart
+	}
+}

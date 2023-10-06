@@ -2,6 +2,12 @@
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import clsx from "clsx";
+import {
+	SignInButton,
+	SignedIn,
+	SignedOut,
+	UserButton,
+} from "@clerk/nextjs";
 import { Search } from "../atoms/Search";
 import { getProductsCategories } from "@/api/products";
 import { ActiveLink } from "@/ui/atoms/ActiveLink";
@@ -55,6 +61,16 @@ export const NavBar = async () => {
 						<span className="sr-only">View cart</span>
 					</Link>
 				</div>
+				<ActiveLink href={`/orders`}>My orders</ActiveLink>
+				<SignedIn>
+					<UserButton
+						userProfileUrl="/user-profile"
+						userProfileMode="navigation"
+					/>
+				</SignedIn>
+				<SignedOut>
+					<SignInButton />
+				</SignedOut>
 			</div>
 		</nav>
 	);

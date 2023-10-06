@@ -1,21 +1,17 @@
-import { type NextRequest } from "next/server";
-// import { isAuthenticated } from "@lib/auth";
+import { authMiddleware } from "@clerk/nextjs";
 
-// export const config = {
-// 	matcher: "/api/:function*",
-// };
+export const config = {
+	matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+};
 
-export function middleware(_request: NextRequest) {
-	// if (!isAuthenticated(request)) {
-	// 	return new NextResponse(
-	// 		JSON.stringify({
-	// 			success: false,
-	// 			message: "authentication failed",
-	// 		}),
-	// 		{
-	// 			status: 401,
-	// 			headers: { "content-type": "application/json" },
-	// 		},
-	// 	);
-	// }
-}
+export default authMiddleware({
+	publicRoutes: [
+		"/",
+		"/search",
+		"/cart",
+		"/categories/(.*)" as unknown as RegExp,
+		"/collections/(.*)" as unknown as RegExp,
+		"/product/(.*)" as unknown as RegExp,
+		"/products/(.*)" as unknown as RegExp,
+	],
+});
