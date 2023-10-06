@@ -5,6 +5,7 @@ export const config = {
 };
 
 export default authMiddleware({
+	debug: true,
 	publicRoutes: [
 		"/",
 		"/search",
