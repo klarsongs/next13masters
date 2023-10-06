@@ -3,6 +3,8 @@ import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import clsx from "clsx";
 import {
+	ClerkLoaded,
+	ClerkLoading,
 	SignInButton,
 	SignedIn,
 	SignedOut,
@@ -61,20 +63,27 @@ export const NavBar = async () => {
 						<span className="sr-only">View cart</span>
 					</Link>
 				</div>
-				<SignedIn>
-					<ActiveLink href={`/orders`}>My orders</ActiveLink>
-					<UserButton
-						userProfileUrl="/user-profile"
-						userProfileMode="navigation"
-					/>
-				</SignedIn>
-				<SignedOut>
-					<SignInButton>
-						<span className="cursor-pointer rounded-full bg-green-300 px-4 py-2 transition-colors hover:bg-green-200 disabled:cursor-wait disabled:bg-slate-200 disabled:text-slate-400">
-							Sign in
-						</span>
-					</SignInButton>
-				</SignedOut>
+				<ClerkLoading>
+					<span className="cursor-pointer rounded-full bg-green-300 px-4 py-2 transition-colors hover:bg-green-200 disabled:cursor-wait disabled:bg-slate-200 disabled:text-slate-400">
+						Sign in
+					</span>
+				</ClerkLoading>
+				<ClerkLoaded>
+					<SignedIn>
+						<ActiveLink href={`/orders`}>My orders</ActiveLink>
+						<UserButton
+							userProfileUrl="/user-profile"
+							userProfileMode="navigation"
+						/>
+					</SignedIn>
+					<SignedOut>
+						<SignInButton>
+							<span className="cursor-pointer rounded-full bg-green-300 px-4 py-2 transition-colors hover:bg-green-200 disabled:cursor-wait disabled:bg-slate-200 disabled:text-slate-400">
+								Sign in
+							</span>
+						</SignInButton>
+					</SignedOut>
+				</ClerkLoaded>
 			</div>
 		</nav>
 	);
